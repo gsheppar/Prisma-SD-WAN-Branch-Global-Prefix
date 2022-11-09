@@ -124,13 +124,14 @@ def get_all_routes(cgx):
             try:
                 for lannetwork in cgx.get.lannetworks(site_id=site["id"]).cgx_content["items"]:
                     prefixes = lannetwork["ipv4_config"]["prefixes"]
-                    for prefix in prefixes:
-                        if prefix not in global_subnet_list:
-                            prefix_data = {}
-                            prefix_data["Site_Name"] = site["name"]
-                            prefix_data["Type"] = "Site"
-                            prefix_data["Route"] = prefix
-                            global_subnet_list.append(prefix_data)
+                    if lannetwork["scope"] == "global":
+                        for prefix in prefixes:
+                            if prefix not in global_subnet_list:
+                                prefix_data = {}
+                                prefix_data["Site_Name"] = site["name"]
+                                prefix_data["Type"] = "Site"
+                                prefix_data["Route"] = prefix
+                                global_subnet_list.append(prefix_data)
             except:
                 print("Unabled to get site routes " + site["name"])
     
