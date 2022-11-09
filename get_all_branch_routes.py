@@ -119,6 +119,20 @@ def get_all_routes(cgx):
                                     print("Unabled to get IPv4 prefixes from BGP peer " + bgp_id2n[bgpstatus['id']])
             except:
                 print("Unabled to get BGP routes " + element_id2n[element])
+            
+            ############################## Site Routes ######################################
+            try:
+                for lannetwork in cgx.get.lannetworks(site_id=site["id"]).cgx_content["items"]:
+                    prefixes = lannetwork["ipv4_config"]["prefixes"]
+                    for prefix in prefixes:
+                        if prefix not in global_subnet_list:
+                            prefix_data = {}
+                            prefix_data["Site_Name"] = site["name"]
+                            prefix_data["Type"] = "Site"
+                            prefix_data["Route"] = prefix
+                            global_subnet_list.append(prefix_data)
+            except:
+                print("Unabled to get site routes " + site["name"])
     
     if global_subnet_list:
         csv_columns = []
